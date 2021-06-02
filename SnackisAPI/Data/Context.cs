@@ -21,6 +21,7 @@ namespace SnackisAPI.Data
         public DbSet<SiteContent> SiteContent { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -27,13 +27,11 @@
         <div class="card-body">
             @if (Token != null && await _authentication.GetUser(Token) == comment.username)
             {
-                <div class="flex-column">
+                <div>
                     @comment.username -  @comment.comment
                 </div>
                 <div class="text-secondary">
-                    Posted: @comment.posted.ToShortDateString() 
-                    <a href="/Comments/Edit?id=@comment.id">Edit</a>
-                    <a href="/Posts/Post?id=@Model.post.id&&CommentId=@comment.id">Remove</a>
+                    Posted: @comment.posted.ToShortDateString() <a href="/Comments/Edit?id=@comment.id&&PostId=@Model.id">Edit</a> <a href="/Posts/Post?CommentId=@comment.id&&Id=@Model.id">Remove</a>
                 </div>
             }
             else
@@ -42,7 +40,7 @@
                     @comment.username -  @comment.comment
                 </div>
                 <div class="text-secondary">
-                    Posted: @comment.posted.ToShortDateString() <a>Report</a>
+                    Posted: @comment.posted.ToShortDateString() <a href="/Comments/Report?id=@comment.id">Report</a>
                 </div>
             }
         </div>

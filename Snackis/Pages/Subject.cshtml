@@ -40,7 +40,7 @@
                     <a href="/Posts/post?id=@post.id">
                         @post.user - @post.title
                     </a>
-                    <div class="text-secondary font-weight-light">Posted: @post.posted.ToShortDateString() <a>Report</a></div>
+                    <div class="text-secondary font-weight-light">Posted: @post.posted.ToShortDateString() <a href="/Posts/Report?id=@post.id">Report</a></div>
                     <hr />
                 }
             }

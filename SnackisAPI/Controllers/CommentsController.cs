@@ -85,7 +85,41 @@ namespace SnackisAPI.Controllers
             }
 
         }
+        [Authorize]
+        [HttpPost("Comments/Report/Create")]
+        public async Task<ActionResult> CreateReport([FromBody] CreateCommentReportModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
 
+                var comment = await _context.Comments.Where(x => x.Id == model.CommentId).FirstOrDefaultAsync();
+
+                if (user != null && comment != null)
+                {
+                    var Report = new Report
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Comment = comment,
+                        User = user,
+                        Reason = model.Reason
+                    };
+
+                    _context.Reports.Add(Report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
         [AllowAnonymous]
         [HttpGet("Comments/Get/{id?}")]
         public async Task<ActionResult> GetPosts([FromRoute] string id)

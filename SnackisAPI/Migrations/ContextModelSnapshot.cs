@@ -49,14 +49,14 @@ namespace SnackisAPI.Migrations
                         new
                         {
                             Id = "root-0c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "f9b9d977-2736-4b89-a8d6-d7d6f804920a",
+                            ConcurrencyStamp = "1968790f-780f-4447-a0d4-20cbbd4c518e",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "user-2c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "b90129a2-0d70-4477-b566-76b9fcb37289",
+                            ConcurrencyStamp = "e16ad1ac-72da-408b-9fda-1922373576b3",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -234,6 +234,30 @@ namespace SnackisAPI.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Report", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CommentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reports");
+                });
+
             modelBuilder.Entity("SnackisAPI.Data.Entities.SiteContent", b =>
                 {
                     b.Property<string>("Id")
@@ -249,7 +273,7 @@ namespace SnackisAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ce1c4fa1-d688-426a-b537-a34346d2cb47",
+                            Id = "617f93e2-34fa-45e8-8f75-bc2d8635322b",
                             Title = "MyTitle"
                         });
                 });
@@ -339,15 +363,15 @@ namespace SnackisAPI.Migrations
                         {
                             Id = "admin-c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "45e7ea68-8b11-4ac7-98fe-c1e3d603d186",
+                            ConcurrencyStamp = "c409be04-bf9a-4dfa-9456-cd4d280afd99",
                             Email = "admin@core.api",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CORE.API",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENkWqKMYKHrmppZb5lENyFJFTob/cObww7sYpdtT3ij45+ob9rmMBxpHIafkcHrq/g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELLdS7JReOu8giw9VAZV4pF36c65NlRbEkU5d6ROnZOa3EOdxCB6elIUborHK4t+VQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d95e107e-24b3-409d-b1b6-0d2c5bdf7e15",
+                            SecurityStamp = "b97c5814-7abf-4ccc-91d6-5aa3df3ae513",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -430,6 +454,15 @@ namespace SnackisAPI.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Subject");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Report", b =>
+                {
+                    b.HasOne("SnackisAPI.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

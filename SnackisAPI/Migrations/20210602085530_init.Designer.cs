@@ -10,7 +10,7 @@ using SnackisAPI.Data;
 namespace SnackisAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20210520074926_init")]
+    [Migration("20210602085530_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,14 +51,14 @@ namespace SnackisAPI.Migrations
                         new
                         {
                             Id = "root-0c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "628bd5d3-6015-4190-bf71-a50a08554c13",
+                            ConcurrencyStamp = "1968790f-780f-4447-a0d4-20cbbd4c518e",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "user-2c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "3d9c1701-052b-453f-9089-9cdad330826f",
+                            ConcurrencyStamp = "e16ad1ac-72da-408b-9fda-1922373576b3",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -175,6 +175,35 @@ namespace SnackisAPI.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Comment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsReported")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Posted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("SnackisAPI.Data.Entities.Post", b =>
                 {
                     b.Property<string>("Id")
@@ -207,33 +236,28 @@ namespace SnackisAPI.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("SnackisAPI.Data.Entities.PostedComment", b =>
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Report", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("CommentId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsReported")
-                        .HasColumnType("bit");
+                    b.Property<string>("PostId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Posted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("SnackisAPI.Data.Entities.SiteContent", b =>
@@ -251,7 +275,7 @@ namespace SnackisAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d7176a3f-0ba9-4dfd-b96a-e578fe2aa281",
+                            Id = "617f93e2-34fa-45e8-8f75-bc2d8635322b",
                             Title = "MyTitle"
                         });
                 });
@@ -341,15 +365,15 @@ namespace SnackisAPI.Migrations
                         {
                             Id = "admin-c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dd9ad876-dd24-4d70-b89a-b17056587403",
+                            ConcurrencyStamp = "c409be04-bf9a-4dfa-9456-cd4d280afd99",
                             Email = "admin@core.api",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CORE.API",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEwVSX4WL3niQSACdEpgoduMQLX/PQ0p1L6AGWf18JMsiH36PMuKM5lXYxvWbuqk5g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELLdS7JReOu8giw9VAZV4pF36c65NlRbEkU5d6ROnZOa3EOdxCB6elIUborHK4t+VQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f9dd018e-8d17-4a48-b0ed-bcfdd18473a5",
+                            SecurityStamp = "b97c5814-7abf-4ccc-91d6-5aa3df3ae513",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -406,6 +430,21 @@ namespace SnackisAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Comment", b =>
+                {
+                    b.HasOne("SnackisAPI.Data.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("SubjectId");
+
+                    b.HasOne("SnackisAPI.Data.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SnackisAPI.Data.Entities.Post", b =>
                 {
                     b.HasOne("SnackisAPI.Data.Entities.Subject", "Subject")
@@ -421,17 +460,11 @@ namespace SnackisAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SnackisAPI.Data.Entities.PostedComment", b =>
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Report", b =>
                 {
-                    b.HasOne("SnackisAPI.Data.Entities.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
-
                     b.HasOne("SnackisAPI.Data.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });
@@ -443,6 +476,8 @@ namespace SnackisAPI.Migrations
 
             modelBuilder.Entity("SnackisAPI.Data.User", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

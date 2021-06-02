@@ -130,5 +130,35 @@ namespace Snackis.Services
                 }
             }
         }
+
+        public async Task<(string, bool)> ReportPost(string reason, string id, string token)
+        {
+            string url = @"https://localhost:44364/post/Report/create";
+            using (HttpClient client = new HttpClient())
+            {
+                var values = new Dictionary<string, string>
+                {
+                    {"postId", id },
+                    {"reason", reason },
+                };
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var json = JsonConvert.SerializeObject(values, Formatting.Indented);
+                var stringContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Content = stringContent;
+
+                var response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("Success", true);
+                }
+                else
+                {
+                    return ("Unable to create", false);
+                }
+            }
+        }
     }
 }

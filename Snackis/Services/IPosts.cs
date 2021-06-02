@@ -12,6 +12,7 @@ namespace Snackis.Services
         Task<PostModel> GetPost(string id);
         Task<(string, bool)> CreatePost(string title, string description, string token, string subjectId);
         Task<(string, bool)> DeletePost(string Id, string token);
-        Task<(string, bool)> EditPost(string title, string description, string id, string token);
+        Task<(string, bool)> EditPost(string title,string reason, string id, string token);
+        Task<(string, bool)> ReportPost(string reason, string id, string token);
     }
 }

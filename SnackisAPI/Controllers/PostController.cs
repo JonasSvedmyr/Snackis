@@ -85,6 +85,42 @@ namespace SnackisAPI.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("Post/Report/Create")]
+        public async Task<ActionResult> CreateReport([FromBody] CreatePostReportModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+
+                var post = await _context.Posts.Where(x => x.Id == model.PostId).FirstOrDefaultAsync();
+
+                if (user != null && post != null)
+                {
+                    var Report = new Report
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Post = post,
+                        User = user,
+                        Reason = model.Reason
+                    };
+
+                    _context.Reports.Add(Report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
+
         [AllowAnonymous]
         [HttpGet("Post/Get/{id?}")]
         public async Task<ActionResult> GetPosts([FromRoute] string id)

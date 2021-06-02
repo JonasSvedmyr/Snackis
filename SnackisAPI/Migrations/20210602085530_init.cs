@@ -178,6 +178,27 @@ namespace SnackisAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CommentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -215,7 +236,7 @@ namespace SnackisAPI.Migrations
                     SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Posted = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsReported = table.Column<bool>(type: "bit", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -239,19 +260,19 @@ namespace SnackisAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "root-0c0-aa65-4af8-bd17-00bd9344e575", "628bd5d3-6015-4190-bf71-a50a08554c13", "root", "ROOT" },
-                    { "user-2c0-aa65-4af8-bd17-00bd9344e575", "3d9c1701-052b-453f-9089-9cdad330826f", "user", "USER" }
+                    { "root-0c0-aa65-4af8-bd17-00bd9344e575", "1968790f-780f-4447-a0d4-20cbbd4c518e", "root", "ROOT" },
+                    { "user-2c0-aa65-4af8-bd17-00bd9344e575", "e16ad1ac-72da-408b-9fda-1922373576b3", "user", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-c0-aa65-4af8-bd17-00bd9344e575", 0, "dd9ad876-dd24-4d70-b89a-b17056587403", "admin@core.api", true, false, null, "ADMIN@CORE.API", "ADMIN", "AQAAAAEAACcQAAAAEEwVSX4WL3niQSACdEpgoduMQLX/PQ0p1L6AGWf18JMsiH36PMuKM5lXYxvWbuqk5g==", null, false, "f9dd018e-8d17-4a48-b0ed-bcfdd18473a5", false, "admin" });
+                values: new object[] { "admin-c0-aa65-4af8-bd17-00bd9344e575", 0, "c409be04-bf9a-4dfa-9456-cd4d280afd99", "admin@core.api", true, false, null, "ADMIN@CORE.API", "ADMIN", "AQAAAAEAACcQAAAAELLdS7JReOu8giw9VAZV4pF36c65NlRbEkU5d6ROnZOa3EOdxCB6elIUborHK4t+VQ==", null, false, "b97c5814-7abf-4ccc-91d6-5aa3df3ae513", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "SiteContent",
                 columns: new[] { "Id", "Title" },
-                values: new object[] { "d7176a3f-0ba9-4dfd-b96a-e578fe2aa281", "MyTitle" });
+                values: new object[] { "617f93e2-34fa-45e8-8f75-bc2d8635322b", "MyTitle" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -316,6 +337,11 @@ namespace SnackisAPI.Migrations
                 name: "IX_Posts_UserId",
                 table: "Posts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_UserId",
+                table: "Reports",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -337,6 +363,9 @@ namespace SnackisAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Reports");
 
             migrationBuilder.DropTable(
                 name: "SiteContent");
