@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+    <div class="card">
+        <div class="card-body">
+            <h1 class="display-4 text-center">@Model.Site.Title</h1>
+            <div>
+                @foreach (var subject in Model.Subjects)
+                {
+                    <div>
+                        <a href="/subject?id=@subject.id">@subject.title</a>
+                        <hr />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>

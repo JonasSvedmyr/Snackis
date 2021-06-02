@@ -1,0 +1,33 @@
+﻿@page
+@model Snackis.Pages.Auth.LoginModel
+@{
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title mx-auto">Login</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" accept-charset="UTF-8" role="form">
+                   
+                        <div class="form-group">
+                            <input asp-for="Username" class="form-control" placeholder="Username" name="username" type="text">
+                        </div>
+                        <div class="form-group">
+                            <input asp-for="Password" class="form-control" placeholder="Lösenord" name="password" type="password" value="">
+                        </div>
+                        <input class="btn btn-primary btn-lg btn-block" type="submit" value="Login">
+                    
+                </form>
+                <hr />
+                <div>
+                    <span>
+                        <p style="color: red">@Model.ErrorMessage</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

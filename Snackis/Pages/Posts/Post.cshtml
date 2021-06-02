@@ -1,0 +1,50 @@
+﻿@page
+@using Microsoft.AspNetCore.Http;
+@using Snackis.Services;
+
+@model Snackis.Pages.Posts.PostModel
+@inject IHttpContextAccessor HttpContextAccessor;
+@inject IAuthentication _authentication;
+
+
+@{
+    string Token = HttpContextAccessor.HttpContext.Session.GetString("_token");
+}
+<div class="card">
+    <div class="card-body text-center">
+        <h1 class="display-4 text-center">@Model.post.title</h1>
+        <div>
+            @Model.post.description
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-primary" style="margin-top: 1rem; margin-bottom:1rem; color:white" href="/Comments/Create?PostId=@Model.id">Add Comment</a>
+
+@foreach (var comment in Model.Comments)
+{
+    <div class="card">
+        <div class="card-body">
+            @if (Token != null && await _authentication.GetUser(Token) == comment.username)
+            {
+                <div class="flex-column">
+                    @comment.username -  @comment.comment
+                </div>
+                <div class="text-secondary">
+                    Posted: @comment.posted.ToShortDateString() 
+                    <a href="/Comments/Edit?id=@comment.id">Edit</a>
+                    <a href="/Posts/Post?id=@Model.post.id&&CommentId=@comment.id">Remove</a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    @comment.username -  @comment.comment
+                </div>
+                <div class="text-secondary">
+                    Posted: @comment.posted.ToShortDateString() <a>Report</a>
+                </div>
+            }
+        </div>
+    </div>
+}

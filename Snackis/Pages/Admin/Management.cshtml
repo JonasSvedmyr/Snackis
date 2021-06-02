@@ -1,0 +1,37 @@
+﻿@page
+@model Snackis.Pages.Admin.ManagementModel
+@{
+}
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" accept-charset="UTF-8" role="form">
+            <label>Title</label>
+            <Input type="text" asp-for="Site.Title">
+            <button class="btn btn-primary" type="submit">Change</button>
+        </form>
+    </div>
+</div>
+
+<a class="btn btn-primary" style="margin-top: 1rem; margin-bottom:1rem; color:white" href="/Admin/Subjects/Create">Create Subject</a>
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="text-center">Subjects</h2>
+        @foreach (var subject in Model.Subjects)
+        {
+        <div class="justify-content-between">
+        <a>
+            @subject.title
+        </a>
+        <a href="/Admin/Subjects/Edit?Id=@subject.id" class="btn btn-primary">
+            Edit
+        </a>
+        <a href="/Admin/Management?SubjectId=@subject.id" class="btn btn-danger">
+            Remove
+        </a>
+        <hr />
+    </div>
+        }
+    </div>
+</div>

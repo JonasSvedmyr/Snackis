@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Snackis.Services
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IAuthentication Authentication
+
+
+@{
+    string Token = HttpContextAccessor.HttpContext.Session.GetString("_Token");
+}
+@if (Token != null)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-page="">Logout</a>
+    </li>
+    @if (await Authentication.IsAdmin(Token))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Management">Management</a>
+        </li>
+    }
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-page="/auth/login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-page="/auth/register">Register</a>
+    </li>
+    //Temp
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Management">Management</a>
+    </li>
+}

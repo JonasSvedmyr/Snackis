@@ -1,0 +1,30 @@
+﻿@page
+@model Snackis.Pages.Comments.CreateModel
+@{
+}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title mx-auto">Create Comment</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" accept-charset="UTF-8" role="form">
+
+                    <div class="form-group">
+                        <textarea asp-for="Comment" type="text" class="form-control" name="comment"></textarea>
+
+                    </div>
+                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Post">
+
+                </form>
+                <hr />
+                <div>
+                    <span>
+                        <p style="color: red">@Model.ErrorMessage</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

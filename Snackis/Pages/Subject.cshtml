@@ -1,0 +1,49 @@
+﻿@page
+@using Microsoft.AspNetCore.Http;
+@using Snackis.Services;
+
+
+@model Snackis.Pages.SubjectModel
+@inject IHttpContextAccessor HttpContextAccessor;
+@inject IAuthentication _authentication;
+@{
+    string Token = HttpContextAccessor.HttpContext.Session.GetString("_token");
+}
+<div>
+    <div class="card">
+        <div class="card-body text-center">
+            <h1 class="display-4">@Model.Subject.title</h1>
+            <p>@Model.Subject.description</p>
+        </div>
+    </div>
+
+    <a style="margin-top:1rem; margin-bottom:1rem;" class="btn btn-primary align-self-start" href="/Posts/Create?subjectId=@Model.Subject.id">Create new post</a>
+
+    <div class="card">
+        <div class="card-body">
+            @foreach (var post in Model.Posts)
+            {
+                @if (Token != null && await _authentication.GetUser(Token) == post.user)
+                {
+                    <a href="/Posts/post?id=@post.id">
+                        @post.user - @post.title
+                    </a>
+                    <div class="text-secondary font-weight-light">
+                        Posted: @post.posted.ToShortDateString()
+                        <a href="/Posts/Edit?id=@post.id">Edit</a>
+                        <a href="/Subject?id=@Model.Subject.id&&PostId=@post.id">Remove</a>
+                    </div>
+                    <hr />
+                }
+                else
+                {
+                    <a href="/Posts/post?id=@post.id">
+                        @post.user - @post.title
+                    </a>
+                    <div class="text-secondary font-weight-light">Posted: @post.posted.ToShortDateString() <a>Report</a></div>
+                    <hr />
+                }
+            }
+        </div>
+    </div>
+</div>
