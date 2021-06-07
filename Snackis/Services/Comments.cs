@@ -160,5 +160,81 @@ namespace Snackis.Services
                 }
             }
         }
+
+        public async Task<ReportCommentModel> GetReportedComment(string id,string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var url = $"https://localhost:44364/comments/report/get/{id}";
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var comment = await response.Content.ReadFromJsonAsync<ReportCommentModel>();
+                    return comment;
+                }
+                else
+                {
+                    return new ReportCommentModel();
+                }
+            }
+        }
+
+        public async Task<List<ReportCommentModel>> GetReportedComments(string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var url = $"https://localhost:44364/comments/report/get/all";
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var comments = await response.Content.ReadFromJsonAsync<List<ReportCommentModel>>();
+                    return comments;
+                }
+                else
+                {
+                    return new List<ReportCommentModel>();
+                }
+            }
+        }
+
+        public async Task<(string, bool)> RemoveReport(string id, string token)
+        {
+            string url = $"https://localhost:44364/comments/report/remove/{id}";
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.DeleteAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("Success", true);
+                }
+                else
+                {
+                    return ("Unable to delete", false);
+                }
+            }
+        }
+
+        public async Task<(string, bool)> RemoveReportedComment(string id, string token)
+        {
+            string url = $"https://localhost:44364/comments/report/remove/comment/{id}";
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.DeleteAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("Success", true);
+                }
+                else
+                {
+                    return ("Unable to delete", false);
+                }
+            }
+        }
     }
 }

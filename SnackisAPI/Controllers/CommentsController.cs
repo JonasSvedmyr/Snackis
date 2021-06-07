@@ -85,41 +85,6 @@ namespace SnackisAPI.Controllers
             }
 
         }
-        [Authorize]
-        [HttpPost("Comments/Report/Create")]
-        public async Task<ActionResult> CreateReport([FromBody] CreateCommentReportModel model)
-        {
-            try
-            {
-                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
-
-                var comment = await _context.Comments.Where(x => x.Id == model.CommentId).FirstOrDefaultAsync();
-
-                if (user != null && comment != null)
-                {
-                    var Report = new Report
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Comment = comment,
-                        User = user,
-                        Reason = model.Reason
-                    };
-
-                    _context.Reports.Add(Report);
-                    await _context.SaveChangesAsync();
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-
-        }
         [AllowAnonymous]
         [HttpGet("Comments/Get/{id?}")]
         public async Task<ActionResult> GetPosts([FromRoute] string id)
@@ -157,6 +122,7 @@ namespace SnackisAPI.Controllers
             return Ok(listOfSubjects);
         }
 
+
         [Authorize]
         [HttpDelete("Comments/Delete/{id}")]
         public async Task<ActionResult> DeleteComment([FromRoute] string id)
@@ -177,6 +143,163 @@ namespace SnackisAPI.Controllers
                 {
 
                     return BadRequest();
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpPost("Comments/Report/Create")]
+        public async Task<ActionResult> CreateReport([FromBody] CreateCommentReportModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+
+                var comment = await _context.Comments.Where(x => x.Id == model.CommentId).FirstOrDefaultAsync();
+
+                if (user != null && comment != null)
+                {
+                    var Report = new Report
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Comment = comment,
+                        User = user,
+                        Reason = model.Reason
+                    };
+
+                    _context.Reports.Add(Report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+        [Authorize]
+        [HttpGet("Comments/Report/Get/{id?}")]
+        public async Task<ActionResult> GetReportedComment([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+
+                var ReportedComment = await _context.Reports.Include(x => x.User).Include(x => x.Comment).ThenInclude(x => x.User).Where(x => x.Id == id).FirstOrDefaultAsync();
+
+                var comment = new
+                {
+                    Id = ReportedComment.Comment.Id,
+                    text = ReportedComment.Comment.Text,
+                    Username = ReportedComment.Comment.User.UserName
+                };
+
+                return Ok(new
+                {
+                    id = ReportedComment.Id,
+                    reason = ReportedComment.Reason,
+                    userid = ReportedComment.User.Id,
+                    username = ReportedComment.User.UserName,
+                    reportedComment = comment
+                });
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Comments/Report/Get/All")]
+        public async Task<ActionResult> GetReportedComments()
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+
+                var Reports = await _context.Reports.Include(x => x.User).Include(x => x.Comment).ThenInclude(x => x.User).Where(x => x.Comment.Id != null).ToListAsync();
+
+                var ListOfComments = new List<object>();
+
+                foreach (var report in Reports)
+                {
+                    var _comment = new
+                    {
+                        Id = report.Comment.Id,
+                        text = report.Comment.Text,
+                        Username = report.Comment.User.UserName
+                    };
+
+                    ListOfComments.Add(new
+                    {
+                        id = report.Id,
+                        comment = report.Reason,
+                        userid = report.User.Id,
+                        username = report.User.UserName,
+                        reportedComment = _comment
+                    });
+
+                }
+                return Ok(ListOfComments);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("Comments/Report/Remove/{id?}")]
+        public async Task<ActionResult> RemoveReport([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+                try
+                {
+                    var report = await _context.Reports.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    _context.Reports.Remove(report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+
+                    return StatusCode(500);
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        [Authorize]
+        [HttpDelete("Comments/Report/Remove/Comment/{id?}")]
+        public async Task<ActionResult> RemoveComment([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+                try
+                {
+                    var ReportedComment = await _context.Comments.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    _context.Comments.Remove(ReportedComment);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+                    return StatusCode(500);
                 }
             }
             else

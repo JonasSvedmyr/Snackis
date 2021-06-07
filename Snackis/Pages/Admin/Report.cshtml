@@ -2,3 +2,72 @@
 @model Snackis.Pages.Admin.ReportModel
 @{
 }
+
+
+<div class="card">
+    <div class="card-body text-center">
+        @if (Model.Post != null)
+        {
+            <h1 class="display-4 text-center">@Model.Post.ReportedPost.Title</h1>
+            <div>
+                @Model.Post.ReportedPost.Description
+            </div>
+        }
+        else
+        {
+            <div>
+                @Model.Comment.Username - @Model.Comment.ReportedComment.Text
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="display-4 text-center">Reason for report</h1>
+        @if (Model.Post != null)
+        {
+            <div>
+                @Model.Post.Reason
+            </div>
+        }
+        else
+        {
+            <div>
+                @Model.Comment.Reason
+            </div>
+        }
+    </div>
+</div>
+<div>
+    @if (Model.Post != null)
+    {
+        <form method="post">
+            <button class="btn btn-primary text-light" type="submit">Remove</button>
+            <input hidden name="PostReport" value="@Model.Post.Id" />
+        </form>
+    }
+    else
+    {
+        <form method="post">
+            <button class="btn btn-primary text-light" type="submit">Remove</button>
+            <input hidden name="CommentReport" value="@Model.Comment.Id" />
+        </form>
+    }
+    @if (Model.Post != null)
+    {
+        <form method="post">
+            <button class="btn btn-danger text-light">Delete</button>
+            <input hidden name="Post" value="@Model.Post.ReportedPost.Id" />
+        </form>
+
+    }
+    else
+    {
+        <form method="post">
+            <button class="btn btn-danger text-light">Delete</button>
+            <input hidden name="Comment" value="@Model.Comment.ReportedComment.Id" />
+        </form>
+    }
+</div>

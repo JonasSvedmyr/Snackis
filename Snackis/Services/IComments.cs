@@ -14,6 +14,10 @@ namespace Snackis.Services
         Task<(string, bool)> DeleteComment(string id, string token);
         Task<(string, bool)> EditComment(string comment, string id, string token);
         Task<(string, bool)> CreateReport(string reason, string id, string token);
+        Task<ReportCommentModel> GetReportedComment(string id, string token);
+        Task<List<ReportCommentModel>> GetReportedComments(string token);
+        Task<(string, bool)> RemoveReportedComment(string id, string token);
+        Task<(string, bool)> RemoveReport(string id, string token);
 
     }
 }

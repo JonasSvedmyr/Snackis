@@ -85,42 +85,6 @@ namespace SnackisAPI.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost("Post/Report/Create")]
-        public async Task<ActionResult> CreateReport([FromBody] CreatePostReportModel model)
-        {
-            try
-            {
-                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
-
-                var post = await _context.Posts.Where(x => x.Id == model.PostId).FirstOrDefaultAsync();
-
-                if (user != null && post != null)
-                {
-                    var Report = new Report
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Post = post,
-                        User = user,
-                        Reason = model.Reason
-                    };
-
-                    _context.Reports.Add(Report);
-                    await _context.SaveChangesAsync();
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-
-        }
-
         [AllowAnonymous]
         [HttpGet("Post/Get/{id?}")]
         public async Task<ActionResult> GetPosts([FromRoute] string id)
@@ -163,7 +127,6 @@ namespace SnackisAPI.Controllers
         public async Task<ActionResult> DeleteComment([FromRoute] string id)
         {
             var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
-            //var roles = await _userManager.GetRolesAsync(user);
 
             Post post = await _context.Posts.Include(x => x.User).Where(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -179,6 +142,168 @@ namespace SnackisAPI.Controllers
                 {
 
                     return BadRequest();
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        [Authorize]
+        [HttpPost("Post/Report/Create")]
+        public async Task<ActionResult> CreateReport([FromBody] CreatePostReportModel model)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+
+                var post = await _context.Posts.Where(x => x.Id == model.PostId).FirstOrDefaultAsync();
+
+                if (user != null && post != null)
+                {
+                    var Report = new Report
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Post = post,
+                        User = user,
+                        Reason = model.Reason
+                    };
+
+                    _context.Reports.Add(Report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
+        [Authorize]
+        [HttpGet("Post/Report/Get/{id?}")]
+        public async Task<ActionResult> GetReportedComment([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+
+                var ReportedComment = await _context.Reports.Include(x => x.User).Include(x => x.Post).ThenInclude(x => x.User).Where(x => x.Id == id).FirstOrDefaultAsync();
+
+                var post = new
+                {
+                    Id = ReportedComment.Post.Id,
+                    Title = ReportedComment.Post.Title,
+                    Description = ReportedComment.Post.Description,
+                    Username = ReportedComment.Post.User.UserName
+                };
+
+                return Ok(new
+                {
+                    id = ReportedComment.Id,
+                    comment = ReportedComment.Reason,
+                    userid = ReportedComment.User.Id,
+                    username = ReportedComment.User.UserName,
+                    reportedPost = post
+                });
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("Post/Report/Get/All")]
+        public async Task<ActionResult> GetReportedComments([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+
+                var Reports = await _context.Reports.Include(x => x.User).Include(x => x.Post).ThenInclude(x => x.User).Where(x => x.Post.Id != null).ToListAsync();
+
+                var ListOfPosts = new List<object>();
+
+                foreach (var report in Reports)
+                {
+                    var _post = new
+                    {
+                        id = report.Post.Id,
+                        title = report.Post.Title,
+                        description = report.Post.Description,
+                        username = report.Post.User.UserName
+                    };
+
+                    ListOfPosts.Add(new
+                    {
+                        id = report.Id,
+                        reason = report.Reason,
+                        userId = report.User.Id,
+                        username = report.User.UserName,
+                        reportedPost = _post
+                    });
+
+                }
+                return Ok(ListOfPosts);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        [Authorize]
+        [HttpDelete("Post/Report/Remove/{id?}")]
+        public async Task<ActionResult> RemoveReport([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+                try
+                {
+                    var report = await _context.Reports.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    _context.Reports.Remove(report);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+
+                    return StatusCode(500);
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+        [Authorize]
+        [HttpDelete("Post/Report/Remove/Post/{id?}")]
+        public async Task<ActionResult> RemovePost([FromRoute] string id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);
+            if (await _userManager.IsInRoleAsync(user, "root"))
+            {
+                try
+                {
+                    var comments = _context.Comments.Where(x => x.Post.Id == id).ToList();
+                    foreach (var comment in comments)
+                    {
+                        _context.Comments.Remove(comment);
+                    }
+                    await _context.SaveChangesAsync();
+                    var post = await _context.Posts.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    _context.Posts.Remove(post);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                catch (Exception)
+                {
+                    return StatusCode(500);
                 }
             }
             else

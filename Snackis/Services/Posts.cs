@@ -131,6 +131,82 @@ namespace Snackis.Services
             }
         }
 
+        public async Task<ReportPostModel> GetReportedPost(string id, string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var url = $"https://localhost:44364/post/report/get/{id}";
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var posts = await response.Content.ReadFromJsonAsync<ReportPostModel>();
+                    return posts;
+                }
+                else
+                {
+                    return new ReportPostModel();
+                }
+            }
+        }
+
+        public async Task<List<ReportPostModel>> GetReportedPosts(string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var url = $"https://localhost:44364/post/report/get/all";
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var posts = await response.Content.ReadFromJsonAsync<List<ReportPostModel>>();
+                    return posts;
+                }
+                else
+                {
+                    return new List<ReportPostModel>();
+                }
+            }
+        }
+
+        public async Task<(string, bool)> RemoveReport(string id, string token)
+        {
+            string url = $"https://localhost:44364/post/report/remove/{id}";
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.DeleteAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("Success", true);
+                }
+                else
+                {
+                    return ("Unable to delete", false);
+                }
+            }
+        }
+
+        public async Task<(string, bool)> RemoveReportedPost(string id, string token)
+        {
+            string url = $"https://localhost:44364/post/report/remove/post/{id}";
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var response = await client.DeleteAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return ("Success", true);
+                }
+                else
+                {
+                    return ("Unable to delete", false);
+                }
+            }
+        }
+
         public async Task<(string, bool)> ReportPost(string reason, string id, string token)
         {
             string url = @"https://localhost:44364/post/Report/create";
@@ -160,5 +236,7 @@ namespace Snackis.Services
                 }
             }
         }
+
+
     }
 }

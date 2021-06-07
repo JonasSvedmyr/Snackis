@@ -1,0 +1,61 @@
+﻿@page
+@model Snackis.Pages.Admin.ReportsModel
+@{
+}
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="text-center">Reported Posts</h2>
+        @foreach (var post in Model.posts)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Posted by</th>
+                        <th>Reported by</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@post.ReportedPost.Title</td>
+                        <td>@post.ReportedPost.Username</td>
+                        <td>@post.Username</td>
+                        <td>@post.Reason</td>
+                        <td><a href="/Admin/Report?PostId=@post.Id">More</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        }
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="text-center">Reported Comments</h2>
+       
+        @foreach (var comment in Model.Comments)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Posted by</th>
+                        <th>Reported by</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@comment.ReportedComment.Username</td>
+                        <td>@comment.Username</td>
+                        <td>@comment.Reason</td>
+                        <td><a href="/Admin/Report?CommentId=@comment.Id">More</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        }
+    </div>
+</div>
