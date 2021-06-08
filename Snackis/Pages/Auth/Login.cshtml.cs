@@ -38,6 +38,7 @@ namespace Snackis.Pages.Auth
                 if (success)
                 {
                     HttpContext.Session.SetString("_token", result);
+                    //return PartialView("");
                     return RedirectToPage("/Index");
                 }
                 else

@@ -5,18 +5,22 @@
 
 
 @{
-    string Token = HttpContextAccessor.HttpContext.Session.GetString("_Token");
+    string Token = HttpContextAccessor.HttpContext.Session.GetString("_token");
 }
 @if (Token != null)
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-page="">Logout</a>
+        <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Login" onclick="logout()">Logout</a>
     </li>
     @if (await Authentication.IsAdmin(Token))
     {
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Management">Management</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Reports">Reports</a>
+        </li>
+
     }
 }
 else
@@ -26,12 +30,5 @@ else
     </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-page="/auth/register">Register</a>
-    </li>
-    //Temp
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Management">Management</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Reports">Reports</a>
     </li>
 }
