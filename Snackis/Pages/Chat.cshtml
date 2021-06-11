@@ -1,0 +1,34 @@
+﻿@page
+@model Snackis.Pages.ChatModel
+@{
+}
+
+<div class="card">
+    <div class="card-body">
+        <div>
+            <form method="post">
+                <div class="form-row">
+                    <input asp-for="Message" class="form-control" name="message" type="text">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@foreach (var messege in Model.chat.Messages)
+{
+
+    <div class="card">
+        <div class="card-body">
+
+
+            <div>
+                @messege.Username - @messege.Text
+            </div>
+            <div class="text-secondary">
+                Posted: @messege.Sent.ToShortDateString()
+            </div>
+
+        </div>
+    </div>
+}

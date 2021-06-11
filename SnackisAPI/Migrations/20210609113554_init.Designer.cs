@@ -10,7 +10,7 @@ using SnackisAPI.Data;
 namespace SnackisAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20210602085530_init")]
+    [Migration("20210609113554_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,14 +51,14 @@ namespace SnackisAPI.Migrations
                         new
                         {
                             Id = "root-0c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "1968790f-780f-4447-a0d4-20cbbd4c518e",
+                            ConcurrencyStamp = "a8dba4ca-0cee-49e1-9036-64ef7461bda3",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "user-2c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "e16ad1ac-72da-408b-9fda-1922373576b3",
+                            ConcurrencyStamp = "195ed031-7e36-4ae3-a9e5-4ce06702aa2a",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -175,6 +175,26 @@ namespace SnackisAPI.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Chat", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("User1Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("User2Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("User1Id");
+
+                    b.HasIndex("User2Id");
+
+                    b.ToTable("Chats");
+                });
+
             modelBuilder.Entity("SnackisAPI.Data.Entities.Comment", b =>
                 {
                     b.Property<string>("Id")
@@ -202,6 +222,30 @@ namespace SnackisAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ChatId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Sent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("SnackisAPI.Data.Entities.Post", b =>
@@ -242,10 +286,10 @@ namespace SnackisAPI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CommentId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PostId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
@@ -254,6 +298,10 @@ namespace SnackisAPI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
@@ -275,7 +323,7 @@ namespace SnackisAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "617f93e2-34fa-45e8-8f75-bc2d8635322b",
+                            Id = "2370e4bb-3106-43bd-9f48-af01c7e38f42",
                             Title = "MyTitle"
                         });
                 });
@@ -365,15 +413,15 @@ namespace SnackisAPI.Migrations
                         {
                             Id = "admin-c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c409be04-bf9a-4dfa-9456-cd4d280afd99",
+                            ConcurrencyStamp = "6bd3e8c3-c49e-4a17-a4b9-ab2cabad5526",
                             Email = "admin@core.api",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CORE.API",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELLdS7JReOu8giw9VAZV4pF36c65NlRbEkU5d6ROnZOa3EOdxCB6elIUborHK4t+VQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGcFokfsIeymPDx14Wchd5uOz1SglBOGWmTu9szNdht5EQdWmtDDDxhTZyTACCmtVg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b97c5814-7abf-4ccc-91d6-5aa3df3ae513",
+                            SecurityStamp = "6d303842-db81-4ec4-9fdb-239424f45c71",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -430,6 +478,21 @@ namespace SnackisAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Chat", b =>
+                {
+                    b.HasOne("SnackisAPI.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("User1Id");
+
+                    b.HasOne("SnackisAPI.Data.User", "User2")
+                        .WithMany()
+                        .HasForeignKey("User2Id");
+
+                    b.Navigation("User");
+
+                    b.Navigation("User2");
+                });
+
             modelBuilder.Entity("SnackisAPI.Data.Entities.Comment", b =>
                 {
                     b.HasOne("SnackisAPI.Data.Entities.Post", "Post")
@@ -443,6 +506,13 @@ namespace SnackisAPI.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Message", b =>
+                {
+                    b.HasOne("SnackisAPI.Data.Entities.Chat", null)
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("SnackisAPI.Data.Entities.Post", b =>
@@ -462,11 +532,28 @@ namespace SnackisAPI.Migrations
 
             modelBuilder.Entity("SnackisAPI.Data.Entities.Report", b =>
                 {
+                    b.HasOne("SnackisAPI.Data.Entities.Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("SnackisAPI.Data.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+
                     b.HasOne("SnackisAPI.Data.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SnackisAPI.Data.Entities.Chat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("SnackisAPI.Data.Entities.Subject", b =>

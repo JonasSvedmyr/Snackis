@@ -31,6 +31,7 @@ namespace Snackis
             services.AddTransient<IPosts, Posts>();
             services.AddTransient<IComments, Comments>();
             services.AddTransient<ISite, Site>();
+            services.AddTransient<IChats, Chat>();
             services.AddRazorPages();
             services.AddSession(option =>
             {

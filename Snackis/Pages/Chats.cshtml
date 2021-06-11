@@ -1,0 +1,15 @@
+﻿@page
+@model Snackis.Pages.ChatsModel
+@{
+}
+@foreach (var chat in Model.Chats)
+{
+
+    <div class="card">
+        <div class="card-body">
+            <a href="/chat?UserId=@chat.UserId">
+                @chat.User
+            </a>
+        </div>
+    </div>
+}

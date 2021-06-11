@@ -178,21 +178,25 @@ namespace SnackisAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reports",
+                name: "Chats",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CommentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    User1Id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    User2Id = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.PrimaryKey("PK_Chats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reports_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Chats_AspNetUsers_User1Id",
+                        column: x => x.User1Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Chats_AspNetUsers_User2Id",
+                        column: x => x.User2Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -228,6 +232,27 @@ namespace SnackisAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Sent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -255,24 +280,57 @@ namespace SnackisAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CommentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PostId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reports_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reports_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "root-0c0-aa65-4af8-bd17-00bd9344e575", "1968790f-780f-4447-a0d4-20cbbd4c518e", "root", "ROOT" },
-                    { "user-2c0-aa65-4af8-bd17-00bd9344e575", "e16ad1ac-72da-408b-9fda-1922373576b3", "user", "USER" }
+                    { "root-0c0-aa65-4af8-bd17-00bd9344e575", "a8dba4ca-0cee-49e1-9036-64ef7461bda3", "root", "ROOT" },
+                    { "user-2c0-aa65-4af8-bd17-00bd9344e575", "195ed031-7e36-4ae3-a9e5-4ce06702aa2a", "user", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-c0-aa65-4af8-bd17-00bd9344e575", 0, "c409be04-bf9a-4dfa-9456-cd4d280afd99", "admin@core.api", true, false, null, "ADMIN@CORE.API", "ADMIN", "AQAAAAEAACcQAAAAELLdS7JReOu8giw9VAZV4pF36c65NlRbEkU5d6ROnZOa3EOdxCB6elIUborHK4t+VQ==", null, false, "b97c5814-7abf-4ccc-91d6-5aa3df3ae513", false, "admin" });
+                values: new object[] { "admin-c0-aa65-4af8-bd17-00bd9344e575", 0, "6bd3e8c3-c49e-4a17-a4b9-ab2cabad5526", "admin@core.api", true, false, null, "ADMIN@CORE.API", "ADMIN", "AQAAAAEAACcQAAAAEGcFokfsIeymPDx14Wchd5uOz1SglBOGWmTu9szNdht5EQdWmtDDDxhTZyTACCmtVg==", null, false, "6d303842-db81-4ec4-9fdb-239424f45c71", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "SiteContent",
                 columns: new[] { "Id", "Title" },
-                values: new object[] { "617f93e2-34fa-45e8-8f75-bc2d8635322b", "MyTitle" });
+                values: new object[] { "2370e4bb-3106-43bd-9f48-af01c7e38f42", "MyTitle" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -319,6 +377,16 @@ namespace SnackisAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chats_User1Id",
+                table: "Chats",
+                column: "User1Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_User2Id",
+                table: "Chats",
+                column: "User2Id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_SubjectId",
                 table: "Comments",
                 column: "SubjectId");
@@ -329,6 +397,11 @@ namespace SnackisAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatId",
+                table: "Messages",
+                column: "ChatId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_SubjectId",
                 table: "Posts",
                 column: "SubjectId");
@@ -337,6 +410,16 @@ namespace SnackisAPI.Migrations
                 name: "IX_Posts_UserId",
                 table: "Posts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_CommentId",
+                table: "Reports",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_PostId",
+                table: "Reports",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_UserId",
@@ -362,7 +445,7 @@ namespace SnackisAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Reports");
@@ -372,6 +455,12 @@ namespace SnackisAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Posts");

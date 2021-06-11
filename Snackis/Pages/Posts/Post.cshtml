@@ -37,7 +37,7 @@
             else
             {
                 <div>
-                    @comment.username -  @comment.comment
+                    <a href="/Chat?UserId=@comment.userid">@comment.username</a> -  @comment.comment
                 </div>
                 <div class="text-secondary">
                     Posted: @comment.posted.ToShortDateString() <a href="/Comments/Report?id=@comment.id">Report</a>

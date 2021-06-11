@@ -22,6 +22,8 @@ namespace SnackisAPI.Data
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Chat> Chats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
