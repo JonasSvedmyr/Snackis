@@ -116,6 +116,7 @@ namespace SnackisAPI.Controllers
                     comment = post.Text,
                     userid = post.User.Id,
                     username = post.User.UserName,
+                    imageUri = post.User.ImageUri,
                     posted = post.Posted
                 });
             }

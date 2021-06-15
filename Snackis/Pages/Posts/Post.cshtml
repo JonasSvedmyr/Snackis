@@ -28,7 +28,7 @@
             @if (Token != null && await _authentication.GetUser(Token) == comment.username)
             {
                 <div>
-                    @comment.username -  @comment.comment
+                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="profile picture" align="left" style="margin-right: 1rem"/> @comment.username -  @comment.comment
                 </div>
                 <div class="text-secondary">
                     Posted: @comment.posted.ToShortDateString() <a href="/Comments/Edit?id=@comment.id&&PostId=@Model.id">Edit</a> <a href="/Posts/Post?CommentId=@comment.id&&Id=@Model.id">Remove</a>
@@ -37,7 +37,7 @@
             else
             {
                 <div>
-                    <a href="/Chat?UserId=@comment.userid">@comment.username</a> -  @comment.comment
+                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="profile picture" align="left" style="margin-right: 1rem"/> <a href="/Chat?UserId=@comment.userid">@comment.username</a> -  @comment.comment
                 </div>
                 <div class="text-secondary">
                     Posted: @comment.posted.ToShortDateString() <a href="/Comments/Report?id=@comment.id">Report</a>

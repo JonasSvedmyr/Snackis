@@ -9,6 +9,7 @@ namespace Snackis.Models
     {
         public string id { get; set; }
         public string comment { get; set; }
+        public string imageUri { get; set; }
         public string userid { get; set; }
         public string username { get; set; }
         public DateTime posted { get; set; }

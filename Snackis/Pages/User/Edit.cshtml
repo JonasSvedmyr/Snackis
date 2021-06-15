@@ -1,0 +1,13 @@
+﻿@page
+@model Snackis.Pages.User.EditModel
+@{
+}
+<div class="card">
+    <div class="card-body">
+        <img src="/Images/@Model.ImageUrl" alt="profile picture" width="100" height="100"/>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" asp-for="Upload" />
+            <input type="submit" />
+        </form>
+    </div>
+</div>

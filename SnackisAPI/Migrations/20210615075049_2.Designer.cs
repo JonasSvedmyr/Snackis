@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SnackisAPI.Data;
 
 namespace SnackisAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210615075049_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace SnackisAPI.Migrations
                         new
                         {
                             Id = "root-0c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "fa06a98c-b6fa-463e-8813-6adfa71eae3f",
+                            ConcurrencyStamp = "4cacea93-3fe0-4e76-8500-53a62088089e",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "user-2c0-aa65-4af8-bd17-00bd9344e575",
-                            ConcurrencyStamp = "4a17d76f-09ac-43ce-859c-6c7df45de4b1",
+                            ConcurrencyStamp = "e77b1293-c03c-4b77-9398-0d67185d8fc7",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -321,7 +323,7 @@ namespace SnackisAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "68d88ded-6141-406c-86b0-1933baaf0d2e",
+                            Id = "cfb54da5-50df-4283-9c52-c614ce11ecdf",
                             Title = "MyTitle"
                         });
                 });
@@ -361,7 +363,7 @@ namespace SnackisAPI.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ImageUri")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -414,15 +416,15 @@ namespace SnackisAPI.Migrations
                         {
                             Id = "admin-c0-aa65-4af8-bd17-00bd9344e575",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fa9565d7-462e-4bf7-9508-5be27ad33ff5",
+                            ConcurrencyStamp = "218f1238-d7fb-4e06-bcce-8a7d5497e17c",
                             Email = "admin@core.api",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CORE.API",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE1S6r/8TD1iLaA6PBRKsRgsvuYZZbxtBvkbbViFV8fGhjjyBfn2aBAL1Hfs16hWxQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJMDjVZxOqsIkgpd1u3qNmKRsM7f8LUDtlA9JV6vrjPXenBsRHiZfqmVeb36nsoYxg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "09de9836-3b70-4ce6-af0c-dd8922252cca",
+                            SecurityStamp = "acd2394f-5308-4f4a-ad83-53876574cee6",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
