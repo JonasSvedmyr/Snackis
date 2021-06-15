@@ -4,7 +4,7 @@
 }
 <div class="card">
     <div class="card-body">
-        <img src="/Images/@Model.ImageUrl" alt="profile picture" width="100" height="100"/>
+        <img src="/Images/@Model.ImageUrl" alt="profile picture" width="100" height="100" onerror="this.onerror=null; this.src='/Images/default-profile-icon.png'" style="margin-bottom:1rem"/>
         <form method="post" enctype="multipart/form-data">
             <input type="file" asp-for="Upload" />
             <input type="submit" />

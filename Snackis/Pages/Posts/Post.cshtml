@@ -14,7 +14,7 @@
     <div class="card-body">
         <h1 class="display-4 text-center">@Model.post.title</h1>
         <div>
-            <img src="/Images/@Model.post.ImageUri" width="50" height="50" alt="" align="left" style="margin-right: 1rem" />@Model.post.user - @Model.post.description
+            <img src="/Images/@Model.post.ImageUri" width="50" height="50" align="left" style="margin-right: 1rem" onerror="this.onerror=null; this.src='/Images/default-profile-icon.png'"/>@Model.post.user - @Model.post.description
         </div>
         <div class="text-secondary">
             Posted: @Model.post.posted.ToShortDateString() @if (Token != null && await _authentication.GetUser(Token) != Model.post.user) 
@@ -34,7 +34,7 @@
             @if (Token != null && await _authentication.GetUser(Token) == comment.username)
             {
                 <div>
-                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="" align="left" style="margin-right: 1rem"/> @comment.username -  @comment.comment
+                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="" align="left" style="margin-right: 1rem" onerror="this.onerror=null; this.src='/Images/default-profile-icon.png'"/> @comment.username -  @comment.comment
                 </div>
                 <div class="text-secondary">
                     Posted: @comment.posted.ToShortDateString() <a href="/Comments/Edit?id=@comment.id&&PostId=@Model.id">Edit</a> <a href="/Posts/Post?CommentId=@comment.id&&Id=@Model.id">Remove</a>
@@ -43,7 +43,7 @@
             else
             {
                 <div>
-                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="" align="left" style="margin-right: 1rem"/> <a href="/Chat?UserId=@comment.userid">@comment.username</a> -  @comment.comment
+                    <img src="/Images/@comment.imageUri" width="50" height="50" alt="" align="left" style="margin-right: 1rem" onerror="this.onerror=null; this.src='/Images/default-profile-icon.png'"/> <a href="/Chat?UserId=@comment.userid">@comment.username</a> -  @comment.comment
                 </div>
                 <div class="text-secondary">
                     Posted: @comment.posted.ToShortDateString() <a href="/Comments/Report?id=@comment.id">Report</a>
