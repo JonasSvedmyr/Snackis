@@ -96,7 +96,8 @@ namespace SnackisAPI.Controllers
                 title = post.Title,
                 description = post.Description,
                 user = post.User.UserName,
-                posted = post.Posted
+                posted = post.Posted,
+                ImageUri = post.User.ImageUri
             });
         }
 
@@ -199,7 +200,7 @@ namespace SnackisAPI.Controllers
                     Id = ReportedComment.Post.Id,
                     Title = ReportedComment.Post.Title,
                     Description = ReportedComment.Post.Description,
-                    Username = ReportedComment.Post.User.UserName
+                    Username = ReportedComment.Post.User.UserName,
                 };
 
                 return Ok(new
