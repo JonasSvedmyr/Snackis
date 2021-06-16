@@ -55,7 +55,7 @@ namespace Snackis.Services
             using (HttpClient client = new HttpClient())
             {
                 var url = _configuration["BaseApiString"];
-                url += $"chat/get/{UserId}";
+                url += $"/chat/get/{UserId}";
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
@@ -78,7 +78,7 @@ namespace Snackis.Services
             using (HttpClient client = new HttpClient())
             {
                 var url = _configuration["BaseApiString"];
-                url += "chat/get/all";
+                url += "/chat/get/all";
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
