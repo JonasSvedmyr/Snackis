@@ -26,9 +26,6 @@ namespace SnackisAPI
         {
             var key = Encoding.ASCII.GetBytes(Configuration["key"]);
 
-            var tewst = Configuration["key"];
-
-            // add and setup the authenticaion with jwt bearer default. As well as storing the key
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

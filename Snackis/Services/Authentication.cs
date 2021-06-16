@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Snackis.Models;
 using System;
@@ -24,6 +25,12 @@ namespace Snackis.Services
 
     public class Authentication : IAuthentication
     {
+        private readonly IConfiguration _configuration;
+
+        public Authentication(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<string> GetUser(string token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -44,7 +51,8 @@ namespace Snackis.Services
 
         public async Task<(bool, string)> Loggin(string user, string password)
         {
-            string url = @"https://localhost:44364/login";
+            var url = _configuration["BaseApiString"];
+            url += "/login";
 
             using (HttpClient client = new HttpClient())
             {
@@ -76,7 +84,8 @@ namespace Snackis.Services
 
         public async Task<(bool, string)> Register(string username, string email, string password)
         {
-            string url = @"https://localhost:44364/register";
+            var url = _configuration["BaseApiString"];
+            url += "/register";
 
             using (HttpClient client = new HttpClient())
             {

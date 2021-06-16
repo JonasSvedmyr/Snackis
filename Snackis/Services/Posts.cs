@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ namespace Snackis.Services
 {
     public class Posts : IPosts
     {
+        private readonly IConfiguration _configuration;
+
+        public Posts(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<(string, bool)> CreatePost(string title, string description, string token, string subjectId)
         {
-            string url = @"https://localhost:44364/post/create";
+            var url = _configuration["BaseApiString"];
+            url += "/post/create";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -44,7 +52,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> DeletePost(string Id, string token)
         {
-            string url = $"https://localhost:44364/post/delete/{Id}";
+            var url = _configuration["BaseApiString"];
+            url += $"/post/delete/{Id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -62,7 +71,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> EditPost(string title, string description, string id, string token)
         {
-            string url = @"https://localhost:44364/post/edit";
+            var url = _configuration["BaseApiString"];
+            url += "/post/edit";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -95,7 +105,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/post/get/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/post/get/{id}";
 
                 var response = await client.GetAsync(url);
 
@@ -115,7 +126,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/post/get/all/{subjectId}";
+                var url = _configuration["BaseApiString"];
+                url += $"/post/get/all/{subjectId}";
 
                 var response = await client.GetAsync(url);
 
@@ -135,7 +147,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/post/report/get/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/post/report/get/{id}";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var response = await client.GetAsync(url);
 
@@ -155,7 +168,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/post/report/get/all";
+                var url = _configuration["BaseApiString"];
+                url += "/post/report/get/all";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var response = await client.GetAsync(url);
 
@@ -173,7 +187,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> RemoveReport(string id, string token)
         {
-            string url = $"https://localhost:44364/post/report/remove/{id}";
+            var url = _configuration["BaseApiString"];
+            url += $"/post/report/remove/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -191,7 +206,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> RemoveReportedPost(string id, string token)
         {
-            string url = $"https://localhost:44364/post/report/remove/post/{id}";
+            var url = _configuration["BaseApiString"];
+            url += "/post/report/remove/post/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -209,7 +225,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> ReportPost(string reason, string id, string token)
         {
-            string url = @"https://localhost:44364/post/Report/create";
+            var url = _configuration["BaseApiString"];
+            url += "/post/Report/create";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>

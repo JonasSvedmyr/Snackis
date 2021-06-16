@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,16 @@ namespace Snackis.Services
 {
     public class Chat : IChats
     {
+        private readonly IConfiguration _configuration;
 
+        public Chat(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<bool> CreateMessages(string id, string message, string token)
         {
-            string url = @"https://localhost:44364/chat/message/create";
+            var url = _configuration["BaseApiString"];
+            url += "/chat/message/create";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -47,7 +54,8 @@ namespace Snackis.Services
             var UserId = id;
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/chat/get/{UserId}";
+                var url = _configuration["BaseApiString"];
+                url += $"chat/get/{UserId}";
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
@@ -69,7 +77,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/chat/get/all";
+                var url = _configuration["BaseApiString"];
+                url += "chat/get/all";
 
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ namespace Snackis.Services
 {
     public class Comments : IComments
     {
+        private readonly IConfiguration _configuration;
+
+        public Comments(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<(string, bool)> CreateComment(string comment, string postid, string token)
         {
-            string url = @"https://localhost:44364/comments/create";
+            var url = _configuration["BaseApiString"];
+            url += "/comments/create";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -44,7 +52,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> CreateReport(string reason, string id, string token)
         {
-            string url = @"https://localhost:44364/comments/Report/create";
+            var url = _configuration["BaseApiString"];
+            url += "/comments/Report/create";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -74,7 +83,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> DeleteComment(string id, string token)
         {
-            string url = $"https://localhost:44364/comments/delete/{id}";
+            var url = _configuration["BaseApiString"];
+            url += $"/comments/delete/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -92,7 +102,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> EditComment(string comment, string id, string token)
         {
-            string url = @"https://localhost:44364/comments/edit";
+            var url = _configuration["BaseApiString"];
+            url += "/comments/edit";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -125,7 +136,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/comments/get/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/comments/get/{id}";
 
                 var response = await client.GetAsync(url);
 
@@ -145,7 +157,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/comments/get/all/{postid}";
+                var url = _configuration["BaseApiString"];
+                url += $"/comments/get/all/{postid}";
 
                 var response = await client.GetAsync(url);
 
@@ -165,7 +178,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/comments/report/get/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/comments/report/get/{id}";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var response = await client.GetAsync(url);
 
@@ -185,7 +199,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/comments/report/get/all";
+                var url = _configuration["BaseApiString"];
+                url += "/comments/report/get/all";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var response = await client.GetAsync(url);
 
@@ -203,7 +218,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> RemoveReport(string id, string token)
         {
-            string url = $"https://localhost:44364/comments/report/remove/{id}";
+            var url = _configuration["BaseApiString"];
+            url += $"/comments/report/remove/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
@@ -221,7 +237,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> RemoveReportedComment(string id, string token)
         {
-            string url = $"https://localhost:44364/comments/report/remove/comment/{id}";
+            var url = _configuration["BaseApiString"];
+            url += $"/comments/report/remove/comment/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);

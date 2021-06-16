@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,18 @@ namespace Snackis.Services
 {
     public class User : IUser
     {
+        private readonly IConfiguration _configuration;
+
+        public User(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<string> GetProfilePicture(string token)
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/User/Picture/Get";
+                var url = _configuration["BaseApiString"];
+                url += "/User/Picture/Get";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
                 var response = await client.GetAsync(url);
@@ -34,7 +42,8 @@ namespace Snackis.Services
 
         public async Task<bool> SetProfilePicture(string ImageUrl, string token)
         {
-            string url = @"https://localhost:44364/User/Picture/Set";
+            var url = _configuration["BaseApiString"];
+            url += "/User/Picture/Set";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>

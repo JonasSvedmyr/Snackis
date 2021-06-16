@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,18 @@ namespace Snackis.Services
 {
     public class Site : ISite
     {
+        private readonly IConfiguration _configuration;
+
+        public Site(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<SiteModel> GetTitle()
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/Title/Get";
+                var url = _configuration["BaseApiString"];
+                url += "/Title/Get";
 
                 var response = await client.GetAsync(url);
 
@@ -33,7 +41,8 @@ namespace Snackis.Services
 
         public async Task<bool> SetTitle(string Title, string token)
         {
-            string url = @"https://localhost:44364/Title/Set";
+            var url = _configuration["BaseApiString"];
+            url += "/Title/Set";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>

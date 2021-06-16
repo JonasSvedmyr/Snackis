@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snackis.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ namespace Snackis.Services
 {
     public class Subjects : ISubjects
     {
+        private readonly IConfiguration _configuration;
+
+        public Subjects(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<(string, bool)> CreateSubject(string title, string description, string token)
         {
-            string url = @"https://localhost:44364/subject/add";
+            var url = _configuration["BaseApiString"];
+            url += "/subject/add";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -45,7 +53,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/subject/delete/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/subject/delete/{id}";
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
                 var response = await client.DeleteAsync(url);
@@ -62,7 +71,8 @@ namespace Snackis.Services
 
         public async Task<(string, bool)> EditSubject(string title, string description, string id, string token)
         {
-            string url = @"https://localhost:44364/subject/edit";
+            var url = _configuration["BaseApiString"];
+            url += "/subject/edit";
             using (HttpClient client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -95,7 +105,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = $"https://localhost:44364/subject/get/{id}";
+                var url = _configuration["BaseApiString"];
+                url += $"/subject/get/{id}";
 
                 var response = await client.GetAsync(url);
 
@@ -115,7 +126,8 @@ namespace Snackis.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                var url = @"https://localhost:44364/subject/get";
+                var url = _configuration["BaseApiString"];
+                url += "/subject/get";
 
                 var response = await client.GetAsync(url);
 
