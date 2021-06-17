@@ -295,6 +295,12 @@ namespace SnackisAPI.Controllers
                 {
                     var ReportedComment = await _context.Comments.Where(x => x.Id == id).FirstOrDefaultAsync();
                     _context.Comments.Remove(ReportedComment);
+                    _context.Entry(ReportedComment).State = EntityState.Deleted;
+                    var reports = await _context.Reports.Where(x => x.Comment.Id == id).ToListAsync();
+                    foreach (var report in reports)
+                    {
+                        _context.Reports.Remove(report);
+                    }
                     await _context.SaveChangesAsync();
                     return Ok();
                 }

@@ -207,7 +207,7 @@ namespace Snackis.Services
         public async Task<(string, bool)> RemoveReportedPost(string id, string token)
         {
             var url = _configuration["BaseApiString"];
-            url += "/post/report/remove/post/{id}";
+            url += $"/post/report/remove/post/{id}";
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
