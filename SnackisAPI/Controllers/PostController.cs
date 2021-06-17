@@ -291,7 +291,7 @@ namespace SnackisAPI.Controllers
             {
                 try
                 {
-                    var comments = _context.Comments.Where(x => x.Post.Id == id).ToList();
+                    var comments = await _context.Comments.Where(x => x.Post.Id == id).ToListAsync();
                     foreach (var comment in comments)
                     {
                         _context.Comments.Remove(comment);
@@ -299,6 +299,12 @@ namespace SnackisAPI.Controllers
                     await _context.SaveChangesAsync();
                     var post = await _context.Posts.Where(x => x.Id == id).FirstOrDefaultAsync();
                     _context.Posts.Remove(post);
+                    _context.Entry(post).State = EntityState.Deleted;
+                    var reports = await _context.Reports.Where(x => x.Post.Id == id).ToListAsync();
+                    foreach (var report in reports)
+                    {
+                        _context.Reports.Remove(report);
+                    }
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
