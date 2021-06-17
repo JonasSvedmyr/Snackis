@@ -10,13 +10,13 @@
         {
             <h1 class="display-4 text-center">@Model.Post.ReportedPost.Title</h1>
             <div>
-                @Model.Post.ReportedPost.Description
+                @Model.Post.ReportedPost.Username - @Model.Post.ReportedPost.Description
             </div>
         }
         else
         {
             <div>
-                @Model.Comment.Username - @Model.Comment.ReportedComment.Text
+                @Model.Comment.ReportedComment.Username - @Model.Comment.ReportedComment.Text
             </div>
         }
     </div>
