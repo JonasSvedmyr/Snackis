@@ -5,12 +5,12 @@
 
 
 <div class="card">
-    <div class="card-body text-center">
+    <div class="card-body">
         @if (Model.Post != null)
         {
             <h1 class="display-4 text-center">@Model.Post.ReportedPost.Title</h1>
             <div>
-                @Model.Post.ReportedPost.Description
+                @Model.Post.ReportedPost.Username - @Model.Post.ReportedPost.Description
             </div>
         }
         else
@@ -24,8 +24,8 @@
 
 
 <div class="card">
-    <div class="card-body">
-        <h1 class="display-4 text-center">Reason for report</h1>
+    <div class="card-body text-center">
+        <h1 class="display-4">Reason for report</h1>
         @if (Model.Post != null)
         {
             <div>

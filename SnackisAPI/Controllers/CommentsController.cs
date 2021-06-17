@@ -244,7 +244,7 @@ namespace SnackisAPI.Controllers
                     ListOfComments.Add(new
                     {
                         id = report.Id,
-                        comment = report.Reason,
+                        reason = report.Reason,
                         userid = report.User.Id,
                         username = report.User.UserName,
                         reportedComment = _comment
