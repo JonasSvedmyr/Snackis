@@ -37,7 +37,7 @@ namespace SnackisAPI.Controllers
                 }
         }
         [Authorize]
-        [HttpPost("/Title/set")]
+        [HttpPost("Title/set")]
         public async Task<ActionResult> SetSiteTitle([FromBody] SetTitleModel model)
         {
             var user = await _userManager.FindByNameAsync(User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value);

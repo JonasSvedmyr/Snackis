@@ -3,8 +3,8 @@
 
 // Write your JavaScript code.
 function logout() {
-    delete_cookie(".AspNetCore.Session", "/", "localhost");
-    window.location.replace("https://localhost:44377/");
+    delete_cookie(".AspNetCore.Session", "/", "snackis418736.azurewebsites.net");
+    window.location.replace("https://snackis418736.azurewebsites.net/");
 }
 
 function delete_cookie(name, path, domain) {
