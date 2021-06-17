@@ -206,7 +206,7 @@ namespace SnackisAPI.Controllers
                 return Ok(new
                 {
                     id = ReportedComment.Id,
-                    comment = ReportedComment.Reason,
+                    reason = ReportedComment.Reason,
                     userid = ReportedComment.User.Id,
                     username = ReportedComment.User.UserName,
                     reportedPost = post
